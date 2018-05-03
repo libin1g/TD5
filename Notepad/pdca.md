@@ -7,3 +7,5 @@
 6. 检视模块代码，排查多点读/写IStringList是否存在内存泄漏并修改
 7. 数据库存储过程生成报表逻辑重构
 
+- rgb等颜色值选中后Toggle切入切出应用该值背景色，附加ClearColoBkg/AddColoBkg函数，以及颜色选择器ColoSelector
+- 验证后去除plugin `Omn...` `Netr...`
