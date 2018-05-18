@@ -1,7 +1,7 @@
 # PDCA 
 ## TODO
-1. ACCESS增加Mainline Delegation点击后，车站弹框提示
-2. ACCESS模块在OCC增加弹框提示，提示当前失联车站列表
+1. ~~ACCESS增加Mainline Delegation点击后，车站弹框提示~~
+2. ~~ACCESS模块在OCC增加弹框提示，提示当前失联车站列表~~
 3. ~~REPORT之O&M文档更新~~
 4. 修改TFS遗留bug
 5. 用户可输入文本框文本校验排查
@@ -14,6 +14,44 @@
 
 
 ***
+**实用骚操作**
+1. @: 重复执行上一次Ex command
+2. .  重复执行上一次normal command
+
+**实用骚操作motion**
+1. w e b 以word为单位移动，大写时认为一个空格间隔就是一个word，所以比小写移动快
+2. 0  移动到当前行首  $ 移动到当前行尾
+   ^  移动到当前行首的第一个word    g_ 移动到当前行最后一个word
+3. (  以sentence为单位 反向移动
+   )  以sentence为单位 正向移动
+   {  以paragraph为单位 反向移动
+   }  以paragraph为单位 正向移动
+4. 在空白行敲viw可以迅速选择临近的空白字符
+   在空白行敲dip可以迅速删除临近的空白行
+5. 缩进时候使用 >8j   >}   <ap   =i} ==会很快
+
+**实用骚操作Text Object motions/operation**
+1. viw ---> visual inner word
+   vaw ---> visual a/an word
+   vi{或者vi} ---> visual inner a couple of {}
+   vi(或者vi) ---> visual inner a couple of ()
+   vis ---> visual inner sentence
+   vas ---> visual a/an sentence
+
+2. diw ---> delete inner word
+   daw ---> delete a/an word
+   dap ---> delete a/an paragraph
+   dip ---> delete inner paragraph
+   di{或者di} ---> delete inner a couple of {}
+   da{或者di} ---> delete a/an a couple of {}
+
+3. ciw ---> change inner word
+   caw ---> change a/an word
+   cap ---> change a/an paragraph
+   cis ---> change inner sentences
+   cas ---> change a/an sentences
+
+
 **窗口操作**
 1.	Ctrl-w K（把当前窗口移到最上边）/ k (激活当前窗口上面的窗口)
 2.	Ctrl-w H（把当前窗口移到最左边）/ h (激活)
