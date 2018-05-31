@@ -1,0 +1,72 @@
+
+----------BreakTheOuterLoop Enter----------
+In while loop, loop variable i = 0
+In for loop, loop variable j = 0
+In for loop, loop variable j = 1
+In for loop, loop variable j = 2
+In for loop, loop variable j = 3
+In for loop, loop variable j = 4
+In for loop, loop variable j = 5
+In for loop, loop variable j = 6
+In for loop, loop variable j = 7
+In for loop, break the outer loop marked by LABEL1.
+----------BreakTheOuterLoop Exit----------
+
+**********ContinueTheOuterLoop Enter**********
+In outer for loop, loop variable i = 0
+In inner for loop, loop variable j = 0
+In inner for loop, loop variable j = 1
+In inner for loop, loop variable j = 2
+In inner for loop, loop variable j = 3
+In inner for loop, loop variable j = 4
+In inner for loop, loop variable j = 5
+In inner for loop, loop variable j = 6
+In inner for loop, loop variable j = 7
+In inner for loop, continue the outer for loop marked by LABEL2.
+In outer for loop, loop variable i = 1
+In inner for loop, loop variable j = 0
+In inner for loop, loop variable j = 1
+In inner for loop, loop variable j = 2
+In inner for loop, loop variable j = 3
+In inner for loop, loop variable j = 4
+In inner for loop, loop variable j = 5
+In inner for loop, loop variable j = 6
+In inner for loop, loop variable j = 7
+In inner for loop, continue the outer for loop marked by LABEL2.
+In outer for loop, loop variable i = 2
+In inner for loop, loop variable j = 0
+In inner for loop, loop variable j = 1
+In inner for loop, loop variable j = 2
+In inner for loop, loop variable j = 3
+In inner for loop, loop variable j = 4
+In inner for loop, loop variable j = 5
+In inner for loop, loop variable j = 6
+In inner for loop, loop variable j = 7
+In inner for loop, continue the outer for loop marked by LABEL2.
+In outer for loop, loop variable i = 3
+In inner for loop, loop variable j = 0
+In inner for loop, loop variable j = 1
+In inner for loop, loop variable j = 2
+In inner for loop, loop variable j = 3
+In inner for loop, loop variable j = 4
+In inner for loop, loop variable j = 5
+In inner for loop, loop variable j = 6
+In inner for loop, loop variable j = 7
+In inner for loop, continue the outer for loop marked by LABEL2.
+In outer for loop, loop variable i = 4
+In inner for loop, loop variable j = 0
+In inner for loop, loop variable j = 1
+In inner for loop, loop variable j = 2
+In inner for loop, loop variable j = 3
+In inner for loop, loop variable j = 4
+In inner for loop, loop variable j = 5
+In inner for loop, loop variable j = 6
+In inner for loop, loop variable j = 7
+In inner for loop, continue the outer for loop marked by LABEL2.
+**********ContinueTheOuterLoop Exit**********
+
+##########BreakToSwitchOuter Enter##########
+In outer switch block, n = 0
+In inner switch block, m = 1
+In inner switch block, break the outer switch marked by LABEL3.
+##########BreakToSwitchOuter Exit##########
