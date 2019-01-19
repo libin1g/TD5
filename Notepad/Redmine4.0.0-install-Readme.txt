@@ -1,0 +1,26 @@
+Version: Redmine 4.0
+ref01.  http://www.redmine.org/projects/redmine/wiki/RedmineInstall 
+ref02.  http://www.redmine.org/projects/redmine/wiki/HowTo_Install_Redmine_30x_on_Ubuntu_1404_with_Apache2_Phusion_Passenger_MySQL_Subversion_and_Git_(Gitolite) 
+
+OS: Ubuntu Server 14.04
+
+Step1: download Redmine 4.0
+       download mysql5.5.62
+step2: install ruby2.3 rails 5.2
+       ref02. install_rvm_ruby_rails_script
+       ref03. https://ruby-china.org/wiki/install_ruby_guide/
+       ref04. https://github.com/huacnlee/init.d
+Step3: install mysql 
+Step4: deploy redmine
+Step5: test the installation by running WEBrick web server
+Step5: 安装 apache2
+Step6: apache与redmine整合 https://cn.aliyun.com/jiaocheng/1184594.html
+
+
+Redmine Backups:
+                                / data (stored in your redmine database - /opt/mysql-5.5.62)
+Redmine backups should include:+
+                                \ attachments (stored in the files directory of your Redmine install - /opt/redmine-4.0.0)
+
+
+Please refer to Backing up and restoring Redmine (http://www.redmine.org/projects/redmine/wiki/RedmineBackupRestore) for more details.
