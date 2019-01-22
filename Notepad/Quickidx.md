@@ -123,9 +123,10 @@ If this is how people percieve text, then so should their editor! Just about any
    cas ---> change a/an sentences
 ---
 
-**其他实用骚操作**
+**其他操作**
 1. @: 重复执行上一次Ex command
 2. .  重复执行上一次normal command
+2. After the 'expandtab' option is set, all the new tab characters entered will be changed to spaces. This will not affect the existing tab characters. To change all the existing tab characters to match the current tab settings, use: `retab` 
 
 **窗口操作**
 1.	Ctrl-w K（把当前窗口移到最上边）/ k (激活当前窗口上面的窗口)
