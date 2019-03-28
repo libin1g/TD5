@@ -1,0 +1,17 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "MyCodeBuild",
+            "type": "shell",
+            "command": "D:\\TD5\\vscode-c++-build-debug\\calc\\MyCodeBuild.bat",
+            "group":{
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher":"$msCompile"
+        }
+    ]
+}
