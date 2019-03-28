@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/../../DevelopPack_win/include",
+                "${workspaceFolder}/../../DevelopPack_win/third-party",
+                "${workspaceFolder}/../../DevelopPack_win/third-party/00.OpcUaSdk/include",
+                "${workspaceFolder}/../../DevelopPack_win/third-party/00.OpcUaSdk/include/uabase",
+                "${workspaceFolder}/../../DevelopPack_win/third-party/00.OpcUaSdk/include/uastack",
+                "${workspaceFolder}/../../DevelopPack_win/third-party/00.OpcUaSdk/include/xmlparser",
+                "${workspaceFolder}/../../DevelopPack_win/third-party/00.OpcUaSdk/include/uaserver",
+                "${workspaceFolder}/../../DevelopPack_win/third-party/01.ACE_wrappers",
+                "${workspaceFolder}/../../DevelopPack_win/third-party/02.SQLite",
+                "${workspaceFolder}/../../DevelopPack_win/third-party/net-snmp"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE",
+                "FEPSNMPDRIVER_EXPORTS"
+            ],
+            "compilerPath": "C:\\\\Program Files\\\\LLVM\\\\bin\\\\clang.exe",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64",
+            "configurationProvider": "vector-of-bool.cmake-tools"
+        }
+    ],
+    "version": 4
+}
