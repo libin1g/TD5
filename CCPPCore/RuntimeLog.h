@@ -22,7 +22,18 @@
 #include <pthread.h>
 #endif // _WINDOWS
 
-class CRuntimeLog {
+#include <iostream>
+
+#ifdef _DEBUG
+#define WRITE_LOG(fmt, ...) \
+    (CRuntimeLog::Instance().WriteLog(fmt, __VA_ARGS__))
+#else
+#define WRITE_LOG(fmt, ...)
+#endif // _DEBUG
+
+
+class CRuntimeLog
+{
 public:
     static CRuntimeLog & Instance()
     {
@@ -30,8 +41,40 @@ public:
         return m_instance;
     }
 
+public:
+    CRuntimeLog()
+    {
+        static CMutex mutex;
+        static LogFile file;
+        if (!m_pMutex || !m_pfile)
+        {
+            m_pMutex = &mutex;
+            m_pfile = &file;
+        }
+        m_clockStart = clock();
+    }
+
+    ~CRuntimeLog()
+    {
+        double dTimeElapsed = (double)(clock() - m_clockStart) / CLOCKS_PER_SEC * 1.0;
+        WriteLog("RuntimeLog: Time Elapsed: %f second(s)", dTimeElapsed);
+    }
+
+
     void WriteLog(const char* pfmt, ...)
     {
+        if (m_pfile->path.empty())
+        {
+            m_pfile->path = "/SCADA/DebugLog/BMFUtilities/";
+            m_pfile->name = "BMFUtilities";
+            m_pfile->extname = ".log";
+#ifdef _WINDOWS
+        CreateDirectory(m_pfile->path.c_str(), NULL);
+#else
+        mkdir(m_pfile->path.c_str(), 0644);
+#endif //_WINDOWS
+        }
+
         int pid = 0;
         int tid = 0;
 #ifdef _WINDOWS
@@ -46,6 +89,11 @@ public:
         snprintf(timeStr, sizeof(timeStr), "%u-%u-%u %u:%u:%u.%03u",
                 st.wYear, st.wMonth, st.wDay,
                 st.wHour, st.wMinute, st.wSecond, st.wMilliseconds);
+
+        char timeStr2[256];
+        memset(timeStr2, 0, sizeof(timeStr2));
+        snprintf(timeStr2, sizeof(timeStr2), "%04u%02u%02u%02u%02u%02u",
+            st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
 #else
         pid = getpid();
         //tid = gettid();
@@ -63,6 +111,10 @@ public:
         char timeStr[256];
         memset(timeStr, 0, sizeof(timeStr));
         snprintf(timeStr, sizeof(timeStr), "%s.%06d", timeBuf, int(tv.tv_usec));
+
+        char timeStr2[256];
+        memset(timeStr2, 0, sizeof(timeStr2));
+        strftime(timeStr2, sizeof(timeStr2), "%Y%m%d%H%M%S", timeinfo);
 #endif // _WINDOWS
 
         va_list vl;
@@ -76,119 +128,86 @@ public:
         memset(logbuf, 0, sizeof(logbuf));
         sprintf(logbuf, "%s: (%d|%d) %s \n", timeStr, pid, tid, buf);
 
-#ifdef _WINDOWS
-        EnterCriticalSection(&m_cs);
-#else
-        pthread_mutex_lock(&m_mutex);
-#endif // _WINDOWS
-        if (!m_pOfs)
+        m_pMutex->lock();
+        if (!m_pfile->pOfs)
         {
-            m_pOfs = new  std::ofstream(m_strLogfile, std::ios::ate | std::ios::app);
+            m_pfile->pOfs = new  std::ofstream((m_pfile->path + "/" + m_pfile->name + m_pfile->extname),
+                std::ios::ate | std::ios::app);
         }
-        m_pOfs->write(logbuf, strlen(logbuf));
-        m_pOfs->flush();
-        if (m_pOfs->tellp() > 2 * 1024 * 1024)
+        m_pfile->pOfs->write(logbuf, strlen(logbuf));
+        m_pfile->pOfs->flush();
+        if (m_pfile->pOfs->tellp() > 2 * 1024 * 1024)
         {
-            m_pOfs->close();
-            delete m_pOfs;
-            m_pOfs = NULL;
+            m_pfile->pOfs->close();
+            delete m_pfile->pOfs;
+            m_pfile->pOfs = NULL;
 
-            time_t t;
-            time(&t);
-            struct tm* tm;
-            tm = localtime(&t);
-            char buf[126];
-            memset(buf, 0, sizeof(buf));
-            strftime(buf, sizeof(buf), "%Y%m%d%H%M%S", tm);
-            rename((m_strLogfile + ".log").c_str(), (m_strLogfile + buf + ".log").c_str());
+            rename((m_pfile->path + "/" + m_pfile->name + m_pfile->extname).c_str(),
+                (m_pfile->path + "/" + m_pfile->name + timeStr2 + m_pfile->extname).c_str());
         }
-#ifdef _WINDOWS
-        LeaveCriticalSection(&m_cs);
-#else
-        pthread_mutex_unlock(&m_mutex);
-#endif // _WINDOWS
+        m_pMutex->unlock();
     }
 
 private:
-    CRuntimeLog()
+    class CMutex
     {
-        std::string strDir = "/SA/DebugLog/Controller";
-#ifdef _WINDOWS
-        InitializeCriticalSection(&m_cs);
-        EnterCriticalSection(&m_cs);
-
-        CreateDirectory(strDir.c_str(), NULL);
-#else
-        pthread_mutex_init(&m_mutex, NULL);
-        pthread_mutex_lock(&m_mutex);
-
-        mkdir(strDir.c_str(), 0644);
-#endif //_WINDOWS
-
-        m_strLogfile = strDir + "/Controller.log";
-        if (!m_pOfs)
+    public:
+        CMutex()
         {
-            m_pOfs = new  std::ofstream(m_strLogfile, std::ios::ate | std::ios::app);
-        }
-        m_clockStart = clock();
-
 #ifdef _WINDOWS
-        LeaveCriticalSection(&m_cs);
+            InitializeCriticalSection(&m_cs);
 #else
-        pthread_mutex_unlock(&m_mutex);
+            pthread_mutex_init(&m_mutex, NULL);
 #endif //_WINDOWS
-    }
-
-    ~CRuntimeLog()
-    {
-        double dTimeElapsed = (double)(clock() - m_clockStart) / CLOCKS_PER_SEC * 1.0;
-        WriteLog("RuntimeLog: %s %f %s %s", m_strLogfile.c_str(), dTimeElapsed,
-            __LINE__, __FUNCTION__, __FILE__);
-
-#ifdef _WINDOWS
-        EnterCriticalSection(&m_cs);
-#else
-        pthread_mutex_lock(&m_mutex);
-#endif //_WINDOWS
-
-        if (m_pOfs)
-        {
-            delete m_pOfs;
-            m_pOfs = NULL;
         }
 
+        ~CMutex()
+        {
 #ifdef _WINDOWS
-        LeaveCriticalSection(&m_cs);
-        DeleteCriticalSection(&m_cs);
+            DeleteCriticalSection(&m_cs);
 #else
-        pthread_mutex_unlock(&m_mutex);
-        pthread_mutex_destroy(&m_mutex);
+            pthread_mutex_destroy(&m_mutex);
 #endif // _WINDOWS
-    }
+        }
 
+    public:
+        void lock()
+        {
+#ifdef _WINDOWS
+            EnterCriticalSection(&m_cs);
+#else
+            pthread_mutex_lock(&m_mutex);
+#endif // _WINDOWS
+        }
+
+        void unlock()
+        {
+#ifdef _WINDOWS
+            LeaveCriticalSection(&m_cs);
+#else
+            pthread_mutex_unlock(&m_mutex);
+#endif // _WINDOWS
+        }
+
+    private:
+#ifdef _WINDOWS
+        CRITICAL_SECTION m_cs;
+#else
+        pthread_mutex_t m_mutex;
+#endif // _WINDOWS
+    } *m_pMutex;
+
+    struct LogFile
+    {
+        std::string path;
+        std::string name;
+        std::string extname;
+        std::ofstream *pOfs;
+        LogFile():path(""), name(""),extname(""),pOfs(NULL)
+        {}
+    } *m_pfile;
 
 private:
-
-#ifdef _WINDOWS
-    CRITICAL_SECTION m_cs;
-#else
-    pthread_mutex_t m_mutex;
-#endif // _WINDOWS
-
-    std::ofstream *m_pOfs;
-    std::string m_strLogfile;
     clock_t m_clockStart;
 };
-
-
-
-
-#ifdef _DEBUG
-#define WRITE_LOG(fmt, ...) \
-    (CRuntimeLog::Instance().WriteLog(fmt, __VA_ARGS__))
-#else
-#define WRITE_LOG(fmt, ...)
-#endif //_DEBUG
-
 #endif // CRUNTIMELOG_H
-
